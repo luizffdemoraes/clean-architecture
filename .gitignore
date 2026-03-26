@@ -1,0 +1,30 @@
+# Dados locais do Docker Compose (MySQL etc.) — não versionar
+.docker/
+
+# Binários e artefatos de build Go
+/bin/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.out
+coverage.html
+
+# Dependências vendored (se passar a usar)
+/vendor/
+
+# Variáveis de ambiente na raiz (cópia local para go run; o projeto pode usar cmd/ordersystem/.env)
+/.env
+
+# IDEs e SO
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

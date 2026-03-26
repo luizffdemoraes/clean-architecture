@@ -2,13 +2,13 @@
 set -e
 
 echo "Aguardando MySQL..."
-until mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USER}" -p"${DB_PASSWORD}" --silent; do
+until mysqladmin ping -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USER}" -p"${DB_PASSWORD}" --skip-ssl --silent; do
   sleep 2
 done
 
 echo "Aplicando migracoes..."
 for migration in /app/migrations/*.sql; do
-  mysql -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USER}" -p"${DB_PASSWORD}" "${DB_NAME}" < "${migration}"
+  mysql --skip-ssl -h"${DB_HOST}" -P"${DB_PORT}" -u"${DB_USER}" -p"${DB_PASSWORD}" "${DB_NAME}" < "${migration}"
 done
 
 echo "Iniciando aplicacao..."

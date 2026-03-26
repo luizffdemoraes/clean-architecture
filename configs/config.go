@@ -1,6 +1,11 @@
 package configs
 
-import "github.com/spf13/viper"
+import (
+	"os"
+	"path/filepath"
+
+	"github.com/spf13/viper"
+)
 
 type conf struct {
 	DBDriver          string `mapstructure:"DB_DRIVER"`
@@ -16,15 +21,21 @@ type conf struct {
 
 func LoadConfig(path string) (*conf, error) {
 	var cfg conf
-	viper.SetConfigName("app_config")
-	viper.SetConfigType("env")
-	viper.AddConfigPath(path)
-	viper.SetConfigFile(".env")
 	viper.AutomaticEnv()
-	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
+	for _, k := range []string{
+		"DB_DRIVER", "DB_HOST", "DB_PORT", "DB_USER", "DB_PASSWORD", "DB_NAME",
+		"WEB_SERVER_PORT", "GRPC_SERVER_PORT", "GRAPHQL_SERVER_PORT",
+	} {
+		_ = viper.BindEnv(k)
+	}
+	envFile := filepath.Join(path, ".env")
+	if _, err := os.Stat(envFile); err == nil {
+		viper.SetConfigFile(envFile)
+		if err := viper.ReadInConfig(); err != nil {
 			return nil, err
 		}
+	} else if !os.IsNotExist(err) {
+		return nil, err
 	}
 	if err := viper.Unmarshal(&cfg); err != nil {
 		return nil, err

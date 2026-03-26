@@ -42,22 +42,22 @@ O avaliador **não deve executar nenhum comando manual** além do Docker Compose
 |------|-----------|
 | **Container da aplicação** | Dockerfile para a aplicação Go. |
 | **Orquestração** | `docker-compose.yaml` sobe o banco de dados e o container da aplicação. |
-| **Execução automática** | Ao rodar `docker compose up`: o banco sobe, as migrações são aplicadas automaticamente e a aplicação inicia nas portas configuradas. |
+| **Execução automática** | Ao rodar `docker compose up --build`: o banco sobe, as migrações são aplicadas automaticamente e a aplicação inicia nas portas configuradas. |
 
 > **Atenção:** Garanta que a aplicação **aguarde o banco estar pronto** antes de rodar migrações ou iniciar (tratamento de *race condition* na inicialização).
 
 ## Como executar
 
-Comando único:
+Comando único (recomendado para garantir a imagem da aplicação atualizada):
 
 ```bash
-docker compose up
+docker compose up --build
 ```
 
 Para executar em background:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
 Para parar os containers:
@@ -111,7 +111,7 @@ Para facilitar os testes, existe uma pasta `docs` com:
 
 ## Como testar rapidamente
 
-> Antes dos testes, garanta que a stack esteja em execucao com `docker compose up` (ou `docker compose up -d`).
+> Antes dos testes, garanta que a stack esteja em execucao com `docker compose up --build` (ou `docker compose up -d --build`).
 
 ### Teste REST (Create + List)
 
