@@ -107,7 +107,7 @@ Na **raiz** do repositório, crie um arquivo **`api.http`** com requisições pr
 
 Para facilitar os testes, existe uma pasta `docs` com:
 
-- `docs/clean-architecture-orders.postman_collection.json` (collection Postman)
+- `docs/clean-architecture-orders.postman_collection.json` (collection Postman: REST, GraphQL e pasta **gRPC (grpcurl)** com comandos para `ListOrders` e `CreateOrder`)
 
 ## Como testar rapidamente
 
@@ -148,21 +148,66 @@ Playground GraphQL:
 
 - `http://localhost:8080/`
 
-### Teste gRPC (ListOrders)
+### Teste gRPC (ListOrders e CreateOrder)
 
-Exemplo com `grpcurl`:
+Com **`grpcurl` instalado** (por exemplo `go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest`):
+
+Listar orders:
 
 ```bash
 grpcurl -plaintext localhost:50051 pb.OrderService/ListOrders
 ```
 
-Se quiser criar uma order via gRPC:
+Criar order:
 
 ```bash
 grpcurl -plaintext \
   -d '{"id":"order-2","price":200.0,"tax":10.0}' \
   localhost:50051 pb.OrderService/CreateOrder
 ```
+
+**Sem instalar o `grpcurl` no sistema**, use a imagem oficial (Docker baixa na primeira vez). Em Linux, `--network host` faz o container enxergar `localhost:50051`:
+
+Listar orders:
+
+```bash
+docker run --rm --network host fullstorydev/grpcurl:latest \
+  -plaintext localhost:50051 pb.OrderService/ListOrders
+```
+
+Criar order:
+
+```bash
+docker run --rm --network host fullstorydev/grpcurl:latest \
+  -plaintext \
+  -d '{"id":"order-2","price":200.0,"tax":10.0}' \
+  localhost:50051 pb.OrderService/CreateOrder
+```
+
+**Opcional — inspecionar a API (server reflection)**  
+Úteis para ver assinaturas e métodos sem abrir o `.proto`. Com `grpcurl` local, use o mesmo padrão trocando `docker run ...` por `grpcurl` e removendo `--network host`.
+
+Listar métodos do serviço:
+
+```bash
+docker run --rm --network host fullstorydev/grpcurl:latest -plaintext \
+  localhost:50051 list pb.OrderService
+```
+
+Descrever o serviço ou um método:
+
+```bash
+docker run --rm --network host fullstorydev/grpcurl:latest -plaintext \
+  localhost:50051 describe pb.OrderService
+
+docker run --rm --network host fullstorydev/grpcurl:latest -plaintext \
+  localhost:50051 describe pb.OrderService.CreateOrder
+
+docker run --rm --network host fullstorydev/grpcurl:latest -plaintext \
+  localhost:50051 describe pb.OrderService.ListOrders
+```
+
+> **Nota:** em cada novo `CreateOrder`, use um `id` de string **único**; repetir o mesmo `id` gera erro de chave duplicada no MySQL.
 
 ## Entregável
 
