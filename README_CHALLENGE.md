@@ -54,45 +54,15 @@ Comando único:
 docker compose up
 ```
 
-Para executar em background:
-
-```bash
-docker compose up -d
-```
-
-Para parar os containers:
-
-```bash
-docker compose down
-```
-
-Para acompanhar logs da aplicação:
-
-```bash
-docker compose logs -f app
-```
-
-## Criação de tabelas (migração)
-
-Nao existe processo manual para criar tabela neste projeto.
-
-- A tabela `orders` e criada automaticamente no startup da aplicacao;
-- o script `scripts/entrypoint.sh` espera o MySQL ficar pronto e executa todos os arquivos `.sql` de `migrations/`;
-- a migracao atual esta em `migrations/001_create_orders.sql`.
-
-Se quiser recriar tudo do zero (incluindo volume do banco), use:
-
-```bash
-docker compose down -v && docker compose up --build
-```
-
 ### Portas dos serviços
 
 | Serviço | Porta |
 |---------|-------|
-| **Web (REST)** | `8000` |
-| **gRPC** | `50051` |
-| **GraphQL** | `8080` |
+| **Web (REST)** | _[documente a porta, ex.: `8080`]_ |
+| **gRPC** | _[documente a porta, ex.: `50051`]_ |
+| **GraphQL** | _[documente a porta, ex.: `8081`]_ |
+
+_Ajuste a tabela acima para refletir exatamente as portas definidas no seu `docker-compose.yaml`._
 
 ## Arquivos auxiliares
 
@@ -103,72 +73,11 @@ Na **raiz** do repositório, crie um arquivo **`api.http`** com requisições pr
 1. **Criar** uma Order (para popular o banco e testar).
 2. **Listar** as Orders (para validar o desafio).
 
-### Pasta `docs`
-
-Para facilitar os testes, existe uma pasta `docs` com:
-
-- `docs/clean-architecture-orders.postman_collection.json` (collection Postman)
-
-## Como testar rapidamente
-
-> Antes dos testes, garanta que a stack esteja em execucao com `docker compose up` (ou `docker compose up -d`).
-
-### Teste REST (Create + List)
-
-Criar order:
-
-```bash
-curl --request POST \
-  --url http://localhost:8000/order \
-  --header 'Content-Type: application/json' \
-  --data '{
-  "id": "order-1",
-  "price": 100.5,
-  "tax": 0.5
-}'
-```
-
-Listar orders:
-
-```bash
-curl --request GET \
-  --url http://localhost:8000/order
-```
-
-### Teste GraphQL (Query ListOrders)
-
-```bash
-curl --request POST \
-  --url http://localhost:8080/query \
-  --header 'Content-Type: application/json' \
-  --data '{"query":"query { ListOrders { id Price Tax FinalPrice } }"}'
-```
-
-Playground GraphQL:
-
-- `http://localhost:8080/`
-
-### Teste gRPC (ListOrders)
-
-Exemplo com `grpcurl`:
-
-```bash
-grpcurl -plaintext localhost:50051 pb.OrderService/ListOrders
-```
-
-Se quiser criar uma order via gRPC:
-
-```bash
-grpcurl -plaintext \
-  -d '{"id":"order-2","price":200.0,"tax":10.0}' \
-  localhost:50051 pb.OrderService/CreateOrder
-```
-
 ## Entregável
 
 | Item | Descrição |
 |------|-----------|
-| **Link do repositório** | [https://github.com/luizffdemoraes/clean-architecture](https://github.com/luizffdemoraes/clean-architecture) |
+| **Link do repositório** | [Inclua aqui o link do seu repositório no GitHub](https://github.com/seu-usuario/seu-repositorio) |
 | **README** | Este arquivo, com o comando único de execução e as portas de Web, gRPC e GraphQL. |
 
 ## Regras de entrega

@@ -1,0 +1,86 @@
+{
+  "info": {
+    "_postman_id": "7d4b2f0e-7cdb-4f96-9f85-1fa2cfce3b91",
+    "name": "Clean Architecture Orders",
+    "description": "Collection para testar REST e GraphQL do desafio.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "REST - Criar Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"order-1\",\n  \"price\": 100.5,\n  \"tax\": 0.5\n}"
+        },
+        "url": {
+          "raw": "{{base_url_rest}}/order",
+          "host": [
+            "{{base_url_rest}}"
+          ],
+          "path": [
+            "order"
+          ]
+        }
+      }
+    },
+    {
+      "name": "REST - Listar Orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url_rest}}/order",
+          "host": [
+            "{{base_url_rest}}"
+          ],
+          "path": [
+            "order"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GraphQL - ListOrders",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"query\": \"query { ListOrders { id Price Tax FinalPrice } }\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url_graphql}}/query",
+          "host": [
+            "{{base_url_graphql}}"
+          ],
+          "path": [
+            "query"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url_rest",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "base_url_graphql",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
